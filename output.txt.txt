@@ -1,0 +1,49 @@
+import chess
+
+def DFS(tahta: chess.Board, derinlik: int) -> list[str]:
+    def dfs_recursive(current_board, depth):
+        if depth == 0:
+            dfs_positions.append(current_board.fen())
+            return
+        legal_moves = list(current_board.legal_moves)
+        for move in legal_moves:
+            new_board = current_board.copy()
+            new_board.push(move)
+            dfs_recursive(new_board, depth - 1)
+
+    dfs_positions = []
+    dfs_recursive(tahta, derinlik)
+    return dfs_positions
+
+def BFS(tahta: chess.Board, derinlik: int) -> list[str]:
+    bfs_positions = []
+    queue = [(tahta, derinlik)]
+
+    while queue:
+        current_board, depth = queue.pop(0)
+        if depth == 0:
+            bfs_positions.append(current_board.fen())
+        else:
+            legal_moves = list(current_board.legal_moves)
+            for move in legal_moves:
+                new_board = current_board.copy()
+                new_board.push(move)
+                queue.append((new_board, depth - 1))
+
+    return bfs_positions
+
+def main():
+    d = 3
+    start_board = chess.Board()
+    dfs_list = DFS(start_board, d)
+    bfs_list = BFS(start_board, d)
+
+    path_to_output = "output.txt"
+    with open(path_to_output, "w") as out:
+        for liste in [dfs_list, bfs_list]:
+            out.write("\n".join(liste))
+            out.write("\n")
+    print(f"Wrote results to: {path_to_output}")
+
+
+    main()
